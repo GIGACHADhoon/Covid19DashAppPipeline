@@ -31,13 +31,6 @@ class azSqlDB:
                 for _,row in gdf.iterrows():
                     query = f"INSERT INTO nswGeo VALUES ('{row['LGA_CODE19']}','{row['LGA_NAME19']}',geography::STGeomFromText('{row['geo_wkt']}',4283))"
                     cursor.execute(query)
-
-    def getGeo(self):
-        with pyodbc.connect(self.conString) as conn:
-            with conn.cursor() as cursor:
-                cursor.execute('SELECT lgaCode,Geom.STAsBinary() FROM nswGeo')
-                data = cursor.fetchall()
-                return data
             
     def sqlCC(self,df):
         with pyodbc.connect(self.conString) as conn:
