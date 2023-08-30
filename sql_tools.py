@@ -24,12 +24,27 @@ class azSqlDB:
                                 WHERE s.name = 'dbo' AND t.name = 'nswGeo') 	\
                                 CREATE TABLE nswGeo (\
                                     lgaCode VARCHAR(5),\
-                                    lgaName VARCHAR(50),\
                                     Geom geography,\
                                     PRIMARY KEY(lgaCode));")
                 
                 for _,row in gdf.iterrows():
-                    query = f"INSERT INTO nswGeo VALUES ('{row['LGA_CODE19']}','{row['LGA_NAME19']}',geography::STGeomFromText('{row['geo_wkt']}',4283))"
+                    query = f"INSERT INTO nswGeo VALUES ('{row['LGA_CODE19']}',geography::STGeomFromText('{row['geo_wkt']}',4283))"
+                    cursor.execute(query)
+
+    def sqlLGA(self,gdf):
+        with pyodbc.connect(self.conString) as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(f"IF NOT EXISTS ( \
+                                SELECT * FROM sys.tables t \
+                                JOIN sys.schemas s ON (t.schema_id = s.schema_id) \
+                                WHERE s.name = 'dbo' AND t.name = 'lgaDetails') 	\
+                                CREATE TABLE lgaDetails (\
+                                    lgaCode VARCHAR(5),\
+                                    lgaName VARCHAR(100),\
+                                    PRIMARY KEY(lgaCode));")
+                
+                for _,row in gdf.iterrows():
+                    query = f"INSERT INTO lgaDetails VALUES ('{row['LGA_CODE19']}','{row['LGA_CODE19']}')"
                     cursor.execute(query)
             
     def sqlCC(self,df):

@@ -16,4 +16,5 @@ sqlCon.sqlCC(df.groupby(['notification_date','lga_code19'])['confirmed_cases_cou
 gdf = gpd.read_file('1270055003_lga_2019_aust_shp.zip')
 gdf = gdf[(gdf['geometry'] != None) & (gdf['STE_NAME16'] == 'New South Wales')]
 gdf['geo_wkt'] = gdf['geometry'].to_wkt()
-sqlCon.sqlGeo(gdf[['LGA_CODE19','LGA_NAME19','geo_wkt']])
+sqlCon.sqlGeo(gdf[['LGA_CODE19','geo_wkt']])
+sqlCon.sqlLGA(gdf[['LGA_CODE19','LGA_NAME19']])
