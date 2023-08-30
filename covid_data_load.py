@@ -13,6 +13,7 @@ df = df[df['lga_code19'].apply(lambda x : len(x) <= 5)]
 df[['notification_date','lga_code19','confirmed_cases_count']]
 sqlCon.sqlCC(df.groupby(['notification_date','lga_code19'])['confirmed_cases_count'].sum().reset_index())
 
+
 gdf = gpd.read_file('1270055003_lga_2019_aust_shp.zip')
 gdf = gdf[(gdf['geometry'] != None) & (gdf['STE_NAME16'] == 'New South Wales')]
 gdf['geo_wkt'] = gdf['geometry'].to_wkt()

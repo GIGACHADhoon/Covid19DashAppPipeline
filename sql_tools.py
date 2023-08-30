@@ -44,7 +44,7 @@ class azSqlDB:
                                     PRIMARY KEY(lgaCode));")
                 
                 for _,row in gdf.iterrows():
-                    query = f"INSERT INTO lgaDetails VALUES ('{row['LGA_CODE19']}','{row['LGA_CODE19']}')"
+                    query = f"INSERT INTO lgaDetails VALUES ('{row['LGA_CODE19']}','{row['LGA_NAME19']}')"
                     cursor.execute(query)
             
     def sqlCC(self,df):
