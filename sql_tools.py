@@ -61,3 +61,22 @@ class azSqlDB:
                                     PRIMARY KEY(date,lgaCode));")
                 for _,row in df.iterrows():
                     cursor.execute(f"INSERT INTO confirmedCases VALUES ('{row['notification_date']}','{row['lga_code19']}','{row['confirmed_cases_count']}')")
+
+    def sqlVax(self,df):
+        with pyodbc.connect(self.conString) as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(f"IF NOT EXISTS ( \
+                                SELECT * FROM sys.tables t \
+                                JOIN sys.schemas s ON (t.schema_id = s.schema_id) \
+                                WHERE s.name = 'dbo' AND t.name = 'nswVax') 	\
+                                CREATE TABLE nswVax (\
+                                    lgaName VARCHAR(100),\
+                                    date DATE, \
+                                    dose1 VARCHAR(5),\
+                                    dose2 VARCHAR(5), \
+                                    dose3 VARCHAR(5), \
+                                    dose4 VARCHAR(5) \
+                                    PRIMARY KEY(lgaName,date));")
+                for _,row in df.iterrows():
+                    cursor.execute(f"INSERT INTO nswVax VALUES ('{row['lga']}','{row['date']}','{row['Dose1']}' \
+                                   ,'{row['Dose2']}','{row['Dose3']}','{row['Dose4']}')")
